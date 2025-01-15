@@ -1,105 +1,81 @@
-import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista',
   templateUrl: './lista.component.html',
-  styleUrls: ['./lista.component.css']
+  styleUrls: ['./lista.component.css'],
+  imports: [CommonModule]
 })
-export class ListaComponent {
-  origem: string = '';
-  currentPage: number = 0;
-  data: any = {};
-  itemIdToDelete: any = null;
+export class ListaComponent implements OnInit {
+  jsonData: any = {};  // Dados dos médicos ou pacientes
+  origem: string = '';  // Para armazenar o valor de origem (paciente ou medico)
   showConfirmModal: boolean = false;
+  showNotification: boolean = false;
+  itemIdToDelete: number | null = null;
 
-  constructor(
-    private location: Location,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    //private http: HttpClient
-  ) {}
-  jsonData: string = 'Clique em um dos botões acima para carregar os dados.';
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.origem = params['origem'];  // Captura o valor de origem (medico ou paciente)
+      if (this.origem) {
+        this.fetchData(this.origem);  // Chama a função para buscar os dados sem paginação
+      }
+    });
+  }
 
   fetchData(origem: string): void {
-    this.origem = origem;
-    const url = `http://localhost:8080/${this.origem}/buscar`;
-
-    this.jsonData = 'Carregando dados...';
-
+    console.log('Buscando dados para:', origem);  // Apenas para debug
+    const url = `http://localhost:8080/${origem}/buscar`;  // Remover o parâmetro de página
+    
     fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Erro ao carregar ${origem}s: ${response.statusText}`);
-        }
-        return response.json();
+      .then(response => response.json())
+      .then(data => {
+        console.log('Dados recebidos:', data);  // Verifica os dados recebidos
+        this.jsonData = data;
       })
-      .then((data) => {
-        this.jsonData = JSON.stringify(data, null, 2);
-      })
-      .catch((error) => {
-        this.jsonData = `Erro: ${error.message}`;
-      });
+      .catch(error => console.error('Erro ao buscar dados:', error));
   }
-  // ngOnInit(): void {
-  //   this.fetchData();
-  // }
 
-  //
-  // fetchData(): void {
-  //   const url = `http://localhost:8080/${this.origem}/buscar?page=${this.currentPage}`;
+  updateItem(id: number): void {
+    // Redireciona para a tela de atualização com o ID
+    this.router.navigate([`/atualizar/${id}`]);
+  }
 
-  //   fetch(url)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       this.data = data;
-  //     })
-  //     .catch(error => console.error(`Erro ao buscar ${this.origem}s:`, error));
-  // }
+  confirmDelete(id: number): void {
+    // Exibe o modal de confirmação de exclusão
+    this.itemIdToDelete = id;
+    this.showConfirmModal = true;
+  }
 
-  //
-  // goToPage(page: number): void {
-  //   this.currentPage = page;
-  //   this.fetchData();
-  // }
+  closeModal(): void {
+    this.showConfirmModal = false;
+  }
 
-  //
-  // updateItem(itemId: string): void {
-  //   console.log('Atualizando item:', itemId);
-  //
-  // }
+  deleteItem(): void {
+    // Faz a requisição para deletar o item
+    if (this.itemIdToDelete) {
+      const url = `http://localhost:8080/${this.origem}/Delete/${this.itemIdToDelete}`;
+      fetch(url, { method: 'DELETE' })
+        .then(response => {
+          if (response.ok) {
+            this.showNotification = true;
+            setTimeout(() => {
+              this.showNotification = false;
+              this.fetchData(this.origem);  // Recarrega os dados após a exclusão
+            }, 3000); // Notificação visível por 3 segundos
+            this.closeModal();
+          } else {
+            console.error('Erro ao excluir:', response.statusText);
+          }
+        })
+        .catch(error => console.error('Erro ao excluir:', error));
+    }
+  }
 
-  //
-  // confirmDelete(itemId: string): void {
-  //   this.itemIdToDelete = itemId;
-  //   this.showConfirmModal = true;
-  // }
-
-  //
-  // closeModal(): void {
-  //   this.showConfirmModal = false;
-  // }
-
-  //
-  // deleteItem(): void {
-  //   if (this.itemIdToDelete) {
-  //     const url = `http://localhost:8080/${this.origem}/Delete/${this.itemIdToDelete}`;
-
-  //     fetch(url, { method: 'DELETE' })
-  //       .then(response => {
-  //         if (response.ok) {
-  //           alert('Excluído com sucesso!');
-  //           this.fetchData();  // Atualiza a lista após exclusão
-  //           this.closeModal();
-  //         } else {
-  //           console.error('Erro ao excluir:', response.statusText);
-  //         }
-  //       })
-  //       .catch(error => console.error('Erro ao excluir:', error));
-  //   }
-  // }
   goBack(): void {
-    this.location.back();
+    window.history.back();
   }
 }

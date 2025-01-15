@@ -1,5 +1,9 @@
-<div>
-    <button (click)="goBack()" class="back-button">
-        <i class="fas fa-arrow-left"></i> Voltar
-    </button>
+<div class="content">
+    <div class="button-container">
+        <button (click)="goBack()" class="back-button">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+        <button (click)="navigateTo('/cadastro')" class="button">Cadastro</button>
+        <button (click)="navigateTo('/lista')" class="button">Listar</button>
+    </div>
 </div>
