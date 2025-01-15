@@ -1,0 +1,12 @@
+<div class="container">
+    <!-- Botões para alternar entre médico e paciente -->
+    <div class="button-group">
+        <button class="button" (click)="fetchData('medico')">Carregar Médicos</button>
+        <button class="button" (click)="fetchData('paciente')">Carregar Pacientes</button>
+    </div>
+
+    <!-- Caixa para exibir o JSON -->
+    <div class="json-box">
+        <pre>{{ jsonData }}</pre>
+    </div>
+</div>
