@@ -2,6 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environments';
 
 @Component({
   selector: 'app-cadastro',
@@ -14,6 +15,7 @@ export class CadastroComponent implements OnInit {
   cadastroForm: FormGroup;
   showNotification: boolean = false;
 
+  private BaseUrl: string= environment.apiUrl;
   constructor(
     private location: Location,
     private router: Router,
@@ -25,8 +27,8 @@ export class CadastroComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', Validators.required],
       ativo: [true],
-      genero: ['MASCULINO', Validators.required],  // Valor padrão para 'genero' corretamente configurado
-      especialidade: ['', Validators.required],  // Para médicos
+      genero: ['MASCULINO', Validators.required],
+      especialidade: ['', Validators.required],
       endereco: this.fb.group({
         logradouro: ['', Validators.required],
         bairro: ['', Validators.required],
@@ -47,13 +49,11 @@ export class CadastroComponent implements OnInit {
   }
 
   loadFormFields(): void {
-    console.log('Carregando campos específicos para', this.origem);
     if (this.origem === 'paciente') {
       this.cadastroForm.addControl('cpf', this.fb.control('', Validators.required));
       this.cadastroForm.addControl('data_nascimento', this.fb.control('', Validators.required));
       this.cadastroForm.addControl('data_registro', this.fb.control(new Date().toISOString(), Validators.required));
   
-      // Remover o campo especialidade, pois não é necessário para pacientes
       this.cadastroForm.removeControl('especialidade');
     } else if (this.origem === 'medico') {
       this.cadastroForm.addControl('crm', this.fb.control('', Validators.required));
@@ -61,18 +61,10 @@ export class CadastroComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Formulário enviado!');
-    console.log('Formulário válido?', this.cadastroForm.valid);
-    console.log('Erros do formulário:', this.cadastroForm.errors);
-    
-    console.log('Valores do formulário antes de enviar:', this.cadastroForm.value); // Verificar os valores aqui
-    
     if (this.cadastroForm.valid) {
-      const url = `http://localhost:8080/${this.origem}/cadastro`;
+      const url = `${this.BaseUrl}/${this.origem}/cadastro`;
       const body = this.prepareRequestBody();
   
-      console.log('URL de envio:', url);
-      console.log('Corpo da requisição:', body);
   
       fetch(url, {
         method: 'POST',
@@ -88,7 +80,6 @@ export class CadastroComponent implements OnInit {
           return response.json();
         })
         .then((data) => {
-          console.log('Cadastro realizado com sucesso:', data);
           this.showNotification = true;
           setTimeout(() => {
             this.showNotification = false;
@@ -105,8 +96,6 @@ export class CadastroComponent implements OnInit {
   prepareRequestBody() {
     const formValues = this.cadastroForm.value;
   
-    // Log de valores do formulário para depuração
-    console.log('Valores do formulário:', formValues);
   
     if (this.origem === 'paciente') {
       return {
@@ -114,10 +103,10 @@ export class CadastroComponent implements OnInit {
         ativo: formValues.ativo,
         email: formValues.email,
         cpf: formValues.cpf,
-        data_nascimento: formValues.data_nascimento, // Data de nascimento no formato ISO
+        data_nascimento: formValues.data_nascimento,
         telefone: formValues.telefone,
         genero: formValues.genero,
-        data_registro: formValues.data_registro, // Data de registro no formato ISO
+        data_registro: formValues.data_registro,
         endereco: {
           logradouro: formValues.endereco.logradouro,
           bairro: formValues.endereco.bairro,
@@ -135,7 +124,7 @@ export class CadastroComponent implements OnInit {
         crm: formValues.crm,
         telefone: formValues.telefone,
         ativo: formValues.ativo,
-        especialidade: formValues.especialidade,  // Envia apenas para médicos
+        especialidade: formValues.especialidade,
         endereco: formValues.endereco,
       };
     }

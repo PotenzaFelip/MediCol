@@ -8,7 +8,6 @@
         <button *ngIf="origem === 'paciente'" class="button" (click)="fetchData('paciente')">Carregar Pacientes</button>
     </div>
 
-    <!-- Exibe os dados -->
     <div *ngFor="let item of jsonData.content">
         <div class="data-item">
             <div class="data-info">
@@ -19,7 +18,6 @@
                 <p *ngIf="origem === 'paciente'"><strong>CPF:</strong> {{ item.cpf }}</p>
             </div>
 
-            <!-- Botões de ação: Atualizar e Deletar -->
             <div class="action-buttons">
                 <button (click)="updateItem(item.id)" class="update-button">Atualizar</button>
                 <button (click)="confirmDelete(item.id)" class="delete-button">Deletar</button>
@@ -27,7 +25,6 @@
         </div>
     </div>
 
-    <!-- Modal de confirmação de exclusão -->
     <div *ngIf="showConfirmModal" class="confirm-modal">
         <div class="modal-content">
             <p>Tem certeza que deseja excluir este item?</p>
@@ -36,7 +33,6 @@
         </div>
     </div>
 
-    <!-- Notificação -->
     <div *ngIf="showNotification" class="notification">
         <p>Item excluído com sucesso!</p>
     </div>

@@ -17,7 +17,6 @@ export class MedicosComponent {
   }
 
     navigateTo(route: string): void {
-      console.log(route);
       this.router.navigate([route],{queryParams:{origem:this.origem}});
     }
 }
