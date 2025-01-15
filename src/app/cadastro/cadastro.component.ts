@@ -11,12 +11,10 @@ import { Router } from '@angular/router';
 export class CadastroComponent {
   constructor(private location: Location, private router: Router) {}
 
-  // Navega para a página anterior
   goBack(): void {
     this.location.back();
   }
 
-  // Navega para a rota especificada
   navigateTo(route: string): void {
     this.router.navigate([route]);
   }
