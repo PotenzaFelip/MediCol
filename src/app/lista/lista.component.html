@@ -2,12 +2,42 @@
     <button (click)="goBack()" class="back-button">
         <i class="fas fa-arrow-left"></i> Voltar
     </button>
+
     <div class="button-group">
-        <button class="button" (click)="fetchData('medico')">Carregar Médicos</button>
-        <button class="button" (click)="fetchData('paciente')">Carregar Pacientes</button>
+        <button *ngIf="origem === 'medico'" class="button" (click)="fetchData('medico')">Carregar Médicos</button>
+        <button *ngIf="origem === 'paciente'" class="button" (click)="fetchData('paciente')">Carregar Pacientes</button>
     </div>
 
-    <div class="json-box">
-        <pre>{{ jsonData }}</pre>
+    <!-- Exibe os dados -->
+    <div *ngFor="let item of jsonData.content">
+        <div class="data-item">
+            <div class="data-info">
+                <p><strong>Nome:</strong> {{ item.nome }}</p>
+                <p><strong>Email:</strong> {{ item.email }}</p>
+                <p><strong>Telefone:</strong> {{ item.telefone }}</p>
+                <p *ngIf="origem === 'medico'"><strong>Especialidade:</strong> {{ item.especialidade }}</p>
+                <p *ngIf="origem === 'paciente'"><strong>CPF:</strong> {{ item.cpf }}</p>
+            </div>
+
+            <!-- Botões de ação: Atualizar e Deletar -->
+            <div class="action-buttons">
+                <button (click)="updateItem(item.id)" class="update-button">Atualizar</button>
+                <button (click)="confirmDelete(item.id)" class="delete-button">Deletar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação de exclusão -->
+    <div *ngIf="showConfirmModal" class="confirm-modal">
+        <div class="modal-content">
+            <p>Tem certeza que deseja excluir este item?</p>
+            <button (click)="deleteItem()" class="confirm-button">Sim</button>
+            <button (click)="closeModal()" class="cancel-button">Não</button>
+        </div>
+    </div>
+
+    <!-- Notificação -->
+    <div *ngIf="showNotification" class="notification">
+        <p>Item excluído com sucesso!</p>
     </div>
 </div>

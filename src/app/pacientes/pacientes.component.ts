@@ -9,12 +9,13 @@ import { Router } from '@angular/router';
   styleUrl: './pacientes.component.css'
 })
 export class PacientesComponent {
+  origem: string = "paciente";
   constructor(private location: Location,private router: Router){}
 
   goBack(): void {
     this.location.back();
   }
     navigateTo(route: string): void {
-      this.router.navigate([route]);
+      this.router.navigate([route],{queryParams:{origem:this.origem}});
     }
 }
