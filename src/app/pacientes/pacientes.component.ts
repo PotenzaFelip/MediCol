@@ -12,9 +12,8 @@ export class PacientesComponent {
   constructor(private location: Location,private router: Router){}
 
   goBack(): void {
-    this.location.back();  // Navega para a página anterior
+    this.location.back();
   }
-    // Navega para a rota especificada
     navigateTo(route: string): void {
       this.router.navigate([route]);
     }
