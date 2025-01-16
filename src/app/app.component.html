@@ -1,11 +1,48 @@
-
-<section id="one" class="wrapper style1"></section>
-<div class="wrapper">
-<router-outlet></router-outlet>
-<br><br>
-</div>
-        <footer id="footer">
-          <ul class="copyright">
-            <li>&copy; 2025 Gestão de Médicos. Todos os direitos reservados.</li>
+<header id="header" class="alt">
+  <h1><a>MediCol</a></h1>
+  <nav id="nav">
+    <ul>
+      <li class="special">
+        <a href="javascript:void(0)" class="menuToggle" (click)="toggleMenu()">
+          <span>Menu</span>
+        </a>
+        <div id="menu" [class.active]="menuOpen">
+          <ul>
+            <li><a (click)="navigateTo('/home')">Home</a></li>
+            <li><a (click)="navigateTo('/medicos')">Medicos</a></li>
+            <li><a (click)="navigateTo('/pacientes')">Pacientes</a></li>
+            <li><a (click)="closeMenu()">Sign Up</a></li>
+            <li><a (click)="closeMenu()">Log In</a></li>
           </ul>
-        </footer>
+          <a class="close" (click)="closeMenu()"></a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<section id="one" class="wrapper style1">
+  <div>
+    <h2>Bem-vindo ao MediCol!</h2>
+    <p>Por favor, selecione uma opção no menu para navegar.</p>
+  </div>
+</section>
+
+<div class="wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<br><br>
+
+<footer id="footer">
+  <ul class="icons">
+    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+    <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
+    <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+  </ul>
+  <ul class="copyright">
+    <li>&copy; 2025 Gestão de Médicos. Todos os direitos reservados.</li>
+  </ul>
+</footer>

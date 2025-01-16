@@ -8,6 +8,7 @@ import { PacientesComponent } from './pacientes/pacientes.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
+    { path: 'home', component:HomeComponent},
     { path: 'medicos', component: MedicosComponent },
     { path: 'pacientes', component: PacientesComponent },
     { path: 'lista', component: ListaComponent },
