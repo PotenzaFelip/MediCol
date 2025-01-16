@@ -28,7 +28,7 @@ export class CadastroComponent implements OnInit {
       telefone: ['', Validators.required],
       ativo: [true],
       genero: ['MASCULINO', Validators.required],
-      especialidade: ['', Validators.required],
+      especialidade: ['ORTOPEDIA', Validators.required],
       endereco: this.fb.group({
         logradouro: ['', Validators.required],
         bairro: ['', Validators.required],
